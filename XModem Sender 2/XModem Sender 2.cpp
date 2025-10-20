@@ -63,7 +63,7 @@ void erstelleBlock(char* _daten)
 
     block[8] = char(checksum);
 
-    n++; // Jedes mal nach ausführen der Funktion den Zähler für Blöcke erhöhen
+    n++; // Jedes mal nach ausführen der Funktion den Zähler für Blöcke erhöhen -> in dieser Version aufgrund der Länge der Nachricht nur 1 Block, jedoch würde man n++ so implementieren wenn man mehrere Blöcke senden wollen würde
 }
 
 int main()
@@ -81,20 +81,20 @@ int main()
         if (com.read() == NAK) {
             cout << "NAK erkannt, nun senden vorbereiten..." << endl;
             break; // Bereitschaft des Empfängers wurde signalisiert und erfasst
-        }
-            
+        }  
     }
-
     
-    char daten[5] = {}; // 5 Datenbytes
+    char daten[6] = {}; // 5 Datenbytes + 1 Nullterminator
 
     cout << "Bitte Daten eingeben: ";
-    cin.getline(daten, 5);
+    cin.getline(daten, 6);
     cout << endl;
 
     erstelleBlock(daten);
 
     com.write(block, blocksize);
-    com.write(EOT);
+    com.write(EOT); // Wird benötigt um das Empfängerprogramm ferngesteuert zu beenden -> in dieser Version kann man also nur max. 5 Zeichen senden
+
+    com.close();
 
 }
